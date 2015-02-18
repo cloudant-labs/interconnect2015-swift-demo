@@ -60,6 +60,7 @@ class ViewController: UITableViewController, UISearchBarDelegate, UISearchDispla
         if tableView == searchDisplayController?.searchResultsTableView {
             return searchResults.count
         }
+        
         return data.count
     }
     

@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3A2E4B9AFE481F1F98E2134E /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 77E2482DE06A4057A700B69F /* libPods.a */; };
+		F824EC231A94F44900CCDE90 /* Cloudant.swift in Sources */ = {isa = PBXBuildFile; fileRef = F824EC221A94F44900CCDE90 /* Cloudant.swift */; };
 		F8DF09011A94EB6E0052038C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8DF09001A94EB6E0052038C /* AppDelegate.swift */; };
 		F8DF09031A94EB6E0052038C /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8DF09021A94EB6E0052038C /* ViewController.swift */; };
 		F8DF09061A94EB6E0052038C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F8DF09041A94EB6E0052038C /* Main.storyboard */; };
@@ -26,6 +28,11 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		77E2482DE06A4057A700B69F /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		F2941CBBC4BB138E1B311079 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
+		F4257518CCCFFEEDEA7D2187 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
+		F824EC221A94F44900CCDE90 /* Cloudant.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Cloudant.swift; sourceTree = "<group>"; };
+		F824EC241A94F46C00CCDE90 /* Interconnect-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Interconnect-Bridging-Header.h"; sourceTree = "<group>"; };
 		F8DF08FB1A94EB6E0052038C /* Interconnect.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Interconnect.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F8DF08FF1A94EB6E0052038C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F8DF09001A94EB6E0052038C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -43,6 +50,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3A2E4B9AFE481F1F98E2134E /* libPods.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -56,12 +64,31 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		3C6F2482D1B378DC12E8B288 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				77E2482DE06A4057A700B69F /* libPods.a */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		4031CDDAEFA99D388DF1A16E /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				F2941CBBC4BB138E1B311079 /* Pods.debug.xcconfig */,
+				F4257518CCCFFEEDEA7D2187 /* Pods.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
 		F8DF08F21A94EB6E0052038C = {
 			isa = PBXGroup;
 			children = (
 				F8DF08FD1A94EB6E0052038C /* Interconnect */,
 				F8DF09131A94EB6E0052038C /* InterconnectTests */,
 				F8DF08FC1A94EB6E0052038C /* Products */,
+				4031CDDAEFA99D388DF1A16E /* Pods */,
+				3C6F2482D1B378DC12E8B288 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -80,9 +107,11 @@
 				F8DF09001A94EB6E0052038C /* AppDelegate.swift */,
 				F8DF09021A94EB6E0052038C /* ViewController.swift */,
 				F8DF09041A94EB6E0052038C /* Main.storyboard */,
+				F824EC221A94F44900CCDE90 /* Cloudant.swift */,
 				F8DF09071A94EB6E0052038C /* Images.xcassets */,
 				F8DF09091A94EB6E0052038C /* LaunchScreen.xib */,
 				F8DF08FE1A94EB6E0052038C /* Supporting Files */,
+				F824EC241A94F46C00CCDE90 /* Interconnect-Bridging-Header.h */,
 			);
 			path = Interconnect;
 			sourceTree = "<group>";
@@ -119,9 +148,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = F8DF091A1A94EB6E0052038C /* Build configuration list for PBXNativeTarget "Interconnect" */;
 			buildPhases = (
+				4A1CFB026C26708D7847F2F6 /* Check Pods Manifest.lock */,
 				F8DF08F71A94EB6E0052038C /* Sources */,
 				F8DF08F81A94EB6E0052038C /* Frameworks */,
 				F8DF08F91A94EB6E0052038C /* Resources */,
+				86647C89A55D7B5BAE142AD6 /* Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -207,12 +238,46 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		4A1CFB026C26708D7847F2F6 /* Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		86647C89A55D7B5BAE142AD6 /* Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods/Pods-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		F8DF08F71A94EB6E0052038C /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 				F8DF09031A94EB6E0052038C /* ViewController.swift in Sources */,
+				F824EC231A94F44900CCDE90 /* Cloudant.swift in Sources */,
 				F8DF09011A94EB6E0052038C /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -334,21 +399,28 @@
 		};
 		F8DF091B1A94EB6E0052038C /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = F2941CBBC4BB138E1B311079 /* Pods.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				INFOPLIST_FILE = Interconnect/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "Interconnect/Interconnect-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
 		};
 		F8DF091C1A94EB6E0052038C /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = F4257518CCCFFEEDEA7D2187 /* Pods.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				INFOPLIST_FILE = Interconnect/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "Interconnect/Interconnect-Bridging-Header.h";
 			};
 			name = Release;
 		};
@@ -405,6 +477,7 @@
 				F8DF091C1A94EB6E0052038C /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		F8DF091D1A94EB6E0052038C /* Build configuration list for PBXNativeTarget "InterconnectTests" */ = {
 			isa = XCConfigurationList;
@@ -413,6 +486,7 @@
 				F8DF091F1A94EB6E0052038C /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
