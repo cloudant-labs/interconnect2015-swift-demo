@@ -8,18 +8,74 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+var words = ["also", "so", "small", "and", "light", "that", "if", "pause", "for", "moment", "in", "writing,", "my", "pinkies", "can", "stretch", "out", "easily", "to", "lightly", "grip", "the", "sides", "and,", "with", "my", "thumbs", "resting", "on", "the", "bottom", "lip,", "I", "can", "nudge", "or", "twist", "the", "keyboard", "by", "a", "few", "fractions", "of", "millimetre", "so", "it’s", "in", "the", "perfect", "position", "for", "typing"]
 
+class ViewController: UITableViewController, UISearchBarDelegate, UISearchDisplayDelegate {
+    
+    var data          = ["One", "Brown", "Fox", "Jumped", "Over", "The", "Quick", "Dog"]
+    var searchResults = [String]()
+    
+    @IBOutlet weak var searchBar: UISearchBar!
+    @IBAction func reload(sender: AnyObject) {
+        
+    }
+    
+    @IBAction func add(sender: AnyObject) {
+        let idx = Int(arc4random_uniform(UInt32(words.count)))
+        data.append(words[idx])
+        tableView.reloadData()
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "reload", name: "CDTReplicationCompleted", object: nil)
     }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+    
+    deinit {
+        NSNotificationCenter.defaultCenter().removeObserver(self)
     }
-
-
+    
+    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+        // Note: _must_ use self.tableView instead of just tableView here - the search display tableview doesn't know
+        // how to dequeue a cell.
+        
+        var item: String
+        let cell = self.tableView.dequeueReusableCellWithIdentifier("basicCell", forIndexPath: indexPath) as UITableViewCell
+        if tableView == searchDisplayController?.searchResultsTableView! {
+            item = searchResults[indexPath.row]
+        } else {
+            item = data[indexPath.row]
+        }
+        
+        cell.textLabel?.text = item
+        
+        return cell
+    }
+    
+    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+        return 1
+    }
+    
+    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if tableView == searchDisplayController?.searchResultsTableView {
+            return searchResults.count
+        }
+        return data.count
+    }
+    
+    // MARK: - UISearchDisplayController Delegate
+    
+    func filterContentForSearchString(searchText:String) {
+        searchResults = data.filter {
+            $0.lowercaseString.rangeOfString(searchText.lowercaseString) != nil
+        }
+    }
+    
+    // Search text changed
+    func searchDisplayController(controller: UISearchDisplayController, shouldReloadTableForSearchString searchString: String) -> Bool {
+        filterContentForSearchString(searchString)
+        return true
+    }
+    
 }
 
