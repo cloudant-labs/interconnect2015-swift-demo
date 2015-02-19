@@ -1,8 +1,9 @@
-//
 //  Cloudant.swift
-//  Interconnect
+//
+//  Interconnect demo
 //
 //  Swift-wrapper for Cloudant's CDTDatastore. See https://github.com/cloudant/CDTDatastore
+//
 //
 //  Created by Stefan Kruger on 18/02/2015.
 //  Copyright (c) 2014 Stefan Kruger. All rights reserved.
@@ -19,7 +20,6 @@ extension CDTQueryResult: SequenceType {
     }
 }
 
-
 /// Swift-wrapper for Cloudant's CDTDatastore. See https://github.com/cloudant/CDTDatastore
 
 class Cloudant: NSObject, CDTReplicatorDelegate {
@@ -28,17 +28,17 @@ class Cloudant: NSObject, CDTReplicatorDelegate {
     Abstraction for a Cloudant connection dealing with bi-directional replication and indexing.
     */
     
-    var username:String
-    var apiPassword:String
-    var apiKey:String
-    var database:String
-    
-    var manager:CDTDatastoreManager
-    var datastore:CDTDatastore
-    var replicatorFactory:CDTReplicatorFactory?
-    var replicator:CDTReplicator?
+    var username    = ""
+    var apiPassword = ""
+    var apiKey      = ""
+    var database    = ""
+
+    var manager: CDTDatastoreManager?
+    var datastore: CDTDatastore?
+    var replicatorFactory: CDTReplicatorFactory?
+    var replicator: CDTReplicator?
     var replHandler: handlerBlock?
-    var indexManager:CDTIndexManager?
+    var indexManager: CDTIndexManager?
     var pullReplication: CDTPullReplication?
     var pushReplication: CDTPushReplication?
     
@@ -57,41 +57,61 @@ class Cloudant: NSObject, CDTReplicatorDelegate {
     
     */
     
-    init(database:String, username:String, key:String, password:String) {
+    convenience init?(database:String, username:String, key:String, password:String, error: NSErrorPointer) {
+        self.init()
+        
         self.database    = database
         self.username    = username
         self.apiKey      = key
         self.apiPassword = password
         
+        
         // Set up the local data store
-        var error: NSError?
+        var err: NSError?
         
         let fileManager  = NSFileManager.defaultManager()
         let documentsDir = fileManager.URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask)[0] as NSURL
         let storeURL     = documentsDir.URLByAppendingPathComponent("cloudant-sync-datastore")
         let path         = storeURL.path
         
-        manager = CDTDatastoreManager(directory: path, error: &error)
-        if let err = error {
-            println("Error creating datastore manager: \(err.localizedDescription)")
+        manager = CDTDatastoreManager(directory: path, error: &err)
+        if manager == nil {
+            if error != nil {
+                if let err = err {
+                    println("Error creating datastore manager: \(err.localizedDescription)")
+                    error.memory = err
+                }
+            }
+            return nil
         }
         
-        datastore = manager.datastoreNamed(database, error: &error)
-        if let err = error {
-            println("Error creating datastore: \(err.localizedDescription)")
+        datastore = manager!.datastoreNamed(database, error: &err)
+        if datastore == nil {
+            if error != nil {
+                if let err = err {
+                    println("Error creating datastore: \(err.localizedDescription)")
+                }
+                error.memory = err
+            }
+            return nil
         }
         
-        indexManager = CDTIndexManager(datastore: datastore, error: &error)
-        if let err = error {
-            println("Error creating index manager: \(err.localizedDescription)")
+        indexManager = CDTIndexManager(datastore: datastore, error: &err)
+        if indexManager == nil {
+            if error != nil {
+                if let err = err {
+                    println("Error creating index manager: \(err.localizedDescription)")
+                }
+                error.memory = err
+            }
+            return nil
         }
         
-        // Create and start the replicator factory
+        // Create replicator factory
         replicatorFactory = CDTReplicatorFactory(datastoreManager: manager)
         
-        datastore.ensureIndexed(["_id"], withName: "all")
-        
-        super.init()
+        // We need at least one index in order to use Cloudant Query. We put an index on the guaranteed to exist field "_id"
+        datastore!.ensureIndexed(["_id"], withName: "all")
     }
     
     /**
@@ -105,7 +125,7 @@ class Cloudant: NSObject, CDTReplicatorDelegate {
     func startPullReplicationWithHandler(completionHandler: handlerBlock) {
         var error: NSError?
         
-        // Make a pull replicator, with ourself as the delegate?
+        // Make a pull replicator, with ourself as the delegate. Note: must keep strong reference to the replication
         pullReplication = CDTPullReplication(source: NSURL(string: urlBase), target: datastore)
         replicator = replicatorFactory!.oneWay(pullReplication, error: &error)
         if let err = error {
@@ -135,7 +155,7 @@ class Cloudant: NSObject, CDTReplicatorDelegate {
     func startPushReplicationWithHandler(completionHandler: handlerBlock) {
         var error: NSError?
         
-        // Make a pull replicator, with ourself as the delegate?
+        // Make a pull replicator, with ourself as the delegate. Note: must keep strong reference to the replication
         pushReplication = CDTPushReplication(source: datastore, target: NSURL(string: urlBase))
         replicator = replicatorFactory!.oneWay(pushReplication, error: &error)
         if let err = error {
@@ -177,14 +197,20 @@ class Cloudant: NSObject, CDTReplicatorDelegate {
     
     */
     
-    func save(body: NSDictionary) -> CDTDocumentRevision? {
+    func save(body: NSDictionary, error: NSErrorPointer) -> CDTDocumentRevision? {
         var mrev = CDTMutableDocumentRevision()
         mrev.setBody(body)
-        var error: NSError?
+        var err: NSError?
         
-        let revision = datastore.createDocumentFromRevision(mrev, error: &error)
-        if let err = error {
-            println("An error occurred saving to the database: \(err.localizedDescription)")
+        let revision = datastore!.createDocumentFromRevision(mrev, error: &err)
+        if revision == nil {
+            if let err = err {
+                println("An error occurred saving to the database: \(err.localizedDescription)")
+                if error != nil {
+                    error.memory = err
+                }
+            }
+
             return nil
         }
         
@@ -202,11 +228,17 @@ class Cloudant: NSObject, CDTReplicatorDelegate {
     
     */
     
-    func document(docid: String) -> CDTDocumentRevision? {
-        var error: NSError?
-        let retrieved = datastore.getDocumentWithId(docid, error: &error)
-        if let err = error {
-            println("Error fetching document '\(docid)': \(err.localizedDescription)")
+    func document(docid: String, error: NSErrorPointer) -> CDTDocumentRevision? {
+        var err: NSError?
+        let retrieved = datastore!.getDocumentWithId(docid, error: &err)
+        if retrieved == nil {
+            if let err = err {
+                println("An error occurred saving to the database: \(err.localizedDescription)")
+                if error != nil {
+                    error.memory = err
+                }
+            }
+            
             return nil
         }
         
@@ -226,7 +258,7 @@ class Cloudant: NSObject, CDTReplicatorDelegate {
     
     func query(parameters: NSDictionary) -> CDTQResultSet? {
         
-        if let resultset = datastore.find(parameters) {
+        if let resultset = datastore!.find(parameters) {
             return resultset
         }
         

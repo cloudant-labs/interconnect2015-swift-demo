@@ -18,7 +18,7 @@ class ViewController: UITableViewController, UISearchBarDelegate, UISearchDispla
     @IBAction func reload(sender: AnyObject) {
         // Read all documents from the database, store in 'data'
         
-        let results = cloudant.query([:])
+        let results = cloudant!.query([:])
         
         data = [String]()
         
@@ -34,8 +34,10 @@ class ViewController: UITableViewController, UISearchBarDelegate, UISearchDispla
     @IBAction func add(sender: AnyObject) {
         let name = NameGenerator.name()
         data.append(name)
-        cloudant.save(["name": name])
-        cloudant.startPushReplicationWithHandler({ })
+        
+        cloudant!.save(["name": name], error: nil)
+        cloudant!.startPushReplicationWithHandler({ })
+        
         tableView.reloadData()
     }
     
