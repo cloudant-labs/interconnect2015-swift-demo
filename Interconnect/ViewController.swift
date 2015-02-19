@@ -36,7 +36,7 @@ class ViewController: UITableViewController, UISearchBarDelegate, UISearchDispla
         data.append(name)
         
         cloudant!.save(["name": name], error: nil)
-        cloudant!.startPushReplicationWithHandler({ })
+        cloudant!.startPushReplicationWithHandler({ }, errorHandler: nil)
         
         tableView.reloadData()
     }

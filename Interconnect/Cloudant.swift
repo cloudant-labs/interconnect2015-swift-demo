@@ -11,6 +11,7 @@
 import Foundation
 
 typealias handlerBlock = () -> Void
+typealias errorBlock = (NSError?) -> Void
 
 /// Required glue code to make NSFastEnumeration types work in Swift
 
@@ -122,14 +123,23 @@ class Cloudant: NSObject, CDTReplicatorDelegate {
     
     */
     
-    func startPullReplicationWithHandler(completionHandler: handlerBlock) {
+    func startPullReplicationWithHandler(completionHandler: handlerBlock, errorHandler: errorBlock?) {
         var error: NSError?
         
         // Make a pull replicator, with ourself as the delegate. Note: must keep strong reference to the replication
         pullReplication = CDTPullReplication(source: NSURL(string: urlBase), target: datastore)
         replicator = replicatorFactory!.oneWay(pullReplication, error: &error)
-        if let err = error {
-            println("Error creating replicator: \(err.localizedDescription)")
+        
+        if replicator == nil {
+            if let err = error {
+                println("Error creating replicator: \(err.localizedDescription)")
+                if let err = error {
+                    println("Error starting replicator: \(err.localizedDescription)")
+                    if errorHandler != nil {
+                        errorHandler!(err)
+                    }
+                }
+            }
             return
         }
         
@@ -137,10 +147,13 @@ class Cloudant: NSObject, CDTReplicatorDelegate {
         
         replicator!.delegate = self
         
-        replicator!.startWithError(&error)
-        if let err = error {
-            println("Error starting replicator: \(err.localizedDescription)")
-            return
+        if !replicator!.startWithError(&error) {
+            if let err = error {
+                println("Error starting replicator: \(err.localizedDescription)")
+                if errorHandler != nil {
+                    errorHandler!(err)
+                }
+            }
         }
     }
     
@@ -152,14 +165,22 @@ class Cloudant: NSObject, CDTReplicatorDelegate {
     
     */
     
-    func startPushReplicationWithHandler(completionHandler: handlerBlock) {
+    func startPushReplicationWithHandler(completionHandler: handlerBlock, errorHandler: errorBlock?) {
         var error: NSError?
         
         // Make a pull replicator, with ourself as the delegate. Note: must keep strong reference to the replication
         pushReplication = CDTPushReplication(source: datastore, target: NSURL(string: urlBase))
         replicator = replicatorFactory!.oneWay(pushReplication, error: &error)
-        if let err = error {
-            println("Error creating replicator: \(err.localizedDescription)")
+        if replicator == nil {
+            if let err = error {
+                println("Error creating replicator: \(err.localizedDescription)")
+                if let err = error {
+                    println("Error starting replicator: \(err.localizedDescription)")
+                    if errorHandler != nil {
+                        errorHandler!(err)
+                    }
+                }
+            }
             return
         }
         
@@ -168,22 +189,12 @@ class Cloudant: NSObject, CDTReplicatorDelegate {
         replicator!.delegate = self
         
         replicator!.startWithError(&error)
-        if let err = error {
-            println("Error starting replicator: \(err.localizedDescription)")
-            return
-        }
-    }
-    
-    /**
-    
-    Bi-directional sync - pull-push. Posts a notification CDTSyncCompleted on successful completion.
-    
-    */
-    
-    func sync() {
-        startPullReplicationWithHandler { [ unowned self ] in
-            self.startPushReplicationWithHandler {
-                NSNotificationCenter.defaultCenter().postNotificationName("CDTSyncCompleted", object: nil)
+        if !replicator!.startWithError(&error) {
+            if let err = error {
+                println("Error starting replicator: \(err.localizedDescription)")
+                if errorHandler != nil {
+                    errorHandler!(err)
+                }
             }
         }
     }

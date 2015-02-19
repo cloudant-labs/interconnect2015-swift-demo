@@ -17,9 +17,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         
-        cloudant!.startPullReplicationWithHandler {
+        cloudant!.startPullReplicationWithHandler({
             NSNotificationCenter.defaultCenter().postNotificationName("CDTPullReplicationCompleted", object: nil)
-        }
+        }, errorHandler: nil)
         
         return true
     }
