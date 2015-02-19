@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		3A2E4B9AFE481F1F98E2134E /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 77E2482DE06A4057A700B69F /* libPods.a */; };
 		F824EC231A94F44900CCDE90 /* Cloudant.swift in Sources */ = {isa = PBXBuildFile; fileRef = F824EC221A94F44900CCDE90 /* Cloudant.swift */; };
+		F824EC281A95EFE900CCDE90 /* NameGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = F824EC271A95EFE900CCDE90 /* NameGenerator.swift */; };
 		F8DF09011A94EB6E0052038C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8DF09001A94EB6E0052038C /* AppDelegate.swift */; };
 		F8DF09031A94EB6E0052038C /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8DF09021A94EB6E0052038C /* ViewController.swift */; };
 		F8DF09061A94EB6E0052038C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F8DF09041A94EB6E0052038C /* Main.storyboard */; };
@@ -33,6 +34,7 @@
 		F4257518CCCFFEEDEA7D2187 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		F824EC221A94F44900CCDE90 /* Cloudant.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Cloudant.swift; sourceTree = "<group>"; };
 		F824EC241A94F46C00CCDE90 /* Interconnect-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Interconnect-Bridging-Header.h"; sourceTree = "<group>"; };
+		F824EC271A95EFE900CCDE90 /* NameGenerator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NameGenerator.swift; sourceTree = "<group>"; };
 		F8DF08FB1A94EB6E0052038C /* Interconnect.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Interconnect.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F8DF08FF1A94EB6E0052038C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F8DF09001A94EB6E0052038C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -106,6 +108,7 @@
 			children = (
 				F8DF09001A94EB6E0052038C /* AppDelegate.swift */,
 				F8DF09021A94EB6E0052038C /* ViewController.swift */,
+				F824EC271A95EFE900CCDE90 /* NameGenerator.swift */,
 				F8DF09041A94EB6E0052038C /* Main.storyboard */,
 				F824EC221A94F44900CCDE90 /* Cloudant.swift */,
 				F8DF09071A94EB6E0052038C /* Images.xcassets */,
@@ -278,6 +281,7 @@
 			files = (
 				F8DF09031A94EB6E0052038C /* ViewController.swift in Sources */,
 				F824EC231A94F44900CCDE90 /* Cloudant.swift in Sources */,
+				F824EC281A95EFE900CCDE90 /* NameGenerator.swift in Sources */,
 				F8DF09011A94EB6E0052038C /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

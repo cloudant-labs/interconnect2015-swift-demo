@@ -15,12 +15,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
 
-
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.
         
         cloudant.startPullReplicationWithHandler {
-            NSNotificationCenter.defaultCenter().postNotificationName("CDTReplicationCompleted", object: nil)
+            NSNotificationCenter.defaultCenter().postNotificationName("CDTPullReplicationCompleted", object: nil)
         }
         
         return true

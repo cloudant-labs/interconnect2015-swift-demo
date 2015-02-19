@@ -8,8 +8,6 @@
 
 import UIKit
 
-var words = ["also", "so", "small", "and", "light", "that", "if", "pause", "for", "moment", "in", "writing,", "my", "pinkies", "can", "stretch", "out", "easily", "to", "lightly", "grip", "the", "sides", "and,", "with", "my", "thumbs", "resting", "on", "the", "bottom", "lip,", "I", "can", "nudge", "or", "twist", "the", "keyboard", "by", "a", "few", "fractions", "of", "millimetre", "so", "it’s", "in", "the", "perfect", "position", "for", "typing"]
-
 class ViewController: UITableViewController, UISearchBarDelegate, UISearchDisplayDelegate {
     
     var data          = [String]()
@@ -18,13 +16,13 @@ class ViewController: UITableViewController, UISearchBarDelegate, UISearchDispla
     @IBOutlet weak var searchBar: UISearchBar!
     
     @IBAction func reload(sender: AnyObject) {
-        // Pull all documents from the database, store in 'data'
+        // Read all documents from the database, store in 'data'
         
         let results = cloudant.query([:])
         
         data = [String]()
         
-        results?.enumerateObjectsUsingBlock { [unowned self] (obj, _, _) in
+        results?.enumerateObjectsUsingBlock { (obj, _, _) in
             if let name = obj.body()["name"] as? String {
                 self.data.append(name)
             }
@@ -34,14 +32,16 @@ class ViewController: UITableViewController, UISearchBarDelegate, UISearchDispla
     }
     
     @IBAction func add(sender: AnyObject) {
-        let idx = Int(arc4random_uniform(UInt32(words.count)))
-        data.append(words[idx])
+        let name = NameGenerator.name()
+        data.append(name)
+        cloudant.save(["name": name])
+        cloudant.startPushReplicationWithHandler({ })
         tableView.reloadData()
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "reload:", name: "CDTReplicationCompleted", object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "reload:", name: "CDTPullReplicationCompleted", object: nil)
     }
     
     deinit {

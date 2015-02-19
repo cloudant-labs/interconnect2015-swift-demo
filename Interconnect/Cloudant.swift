@@ -39,6 +39,8 @@ class Cloudant: NSObject, CDTReplicatorDelegate {
     var replicator:CDTReplicator?
     var replHandler: handlerBlock?
     var indexManager:CDTIndexManager?
+    var pullReplication: CDTPullReplication?
+    var pushReplication: CDTPushReplication?
     
     var urlBase:String {
         return "https://\(apiKey):\(apiPassword)@\(username).cloudant.com/\(database)"
@@ -104,8 +106,8 @@ class Cloudant: NSObject, CDTReplicatorDelegate {
         var error: NSError?
         
         // Make a pull replicator, with ourself as the delegate?
-        let replication = CDTPullReplication(source: NSURL(string: urlBase), target: datastore)
-        replicator = replicatorFactory!.oneWay(replication, error: &error)
+        pullReplication = CDTPullReplication(source: NSURL(string: urlBase), target: datastore)
+        replicator = replicatorFactory!.oneWay(pullReplication, error: &error)
         if let err = error {
             println("Error creating replicator: \(err.localizedDescription)")
             return
@@ -134,8 +136,8 @@ class Cloudant: NSObject, CDTReplicatorDelegate {
         var error: NSError?
         
         // Make a pull replicator, with ourself as the delegate?
-        let replication = CDTPushReplication(source: datastore, target: NSURL(string: urlBase))
-        replicator = replicatorFactory!.oneWay(replication, error: &error)
+        pushReplication = CDTPushReplication(source: datastore, target: NSURL(string: urlBase))
+        replicator = replicatorFactory!.oneWay(pushReplication, error: &error)
         if let err = error {
             println("Error creating replicator: \(err.localizedDescription)")
             return
@@ -233,24 +235,29 @@ class Cloudant: NSObject, CDTReplicatorDelegate {
     
     // MARK: - CDTReplicatorDelegate
     
-    func replicatorDidComplete(replicator: CDTReplicator!) {
-        if let handler = replHandler {
-            handler()
-            NSNotificationCenter.defaultCenter().postNotificationName("CDTReplicationCompleted", object: nil)
+    func replicatorDidComplete(replicator: CDTReplicator?) {
+        if let replicator = replicator {
+            if let handler = replHandler {
+                handler()
+            }
         }
     }
     
-    func replicatorDidChangeProgress(replicator: CDTReplicator!) {
+    func replicatorDidChangeProgress(replicator: CDTReplicator?) {
         
     }
     
-    func replicatorDidChangeState(replicator: CDTReplicator!) {
+    func replicatorDidChangeState(replicator: CDTReplicator?) {
         
     }
     
-    func replicatorDidError(replicator: CDTReplicator!, info: NSError!) {
-        let state = CDTReplicator.stringForReplicatorState(replicator!.state)
-        println("\(state): \(info.localizedDescription)")
+    func replicatorDidError(replicator: CDTReplicator?, info: NSError!) {
+        if let replicator = replicator {
+            let state = CDTReplicator.stringForReplicatorState(replicator.state)
+            println("\(state): \(info.localizedDescription)")
+        } else {
+            println(info.localizedDescription)
+        }
     }
 }
 
