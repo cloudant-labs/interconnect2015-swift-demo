@@ -12,12 +12,25 @@ var words = ["also", "so", "small", "and", "light", "that", "if", "pause", "for"
 
 class ViewController: UITableViewController, UISearchBarDelegate, UISearchDisplayDelegate {
     
-    var data          = ["One", "Brown", "Fox", "Jumped", "Over", "The", "Quick", "Dog"]
+    var data          = [String]()
     var searchResults = [String]()
     
     @IBOutlet weak var searchBar: UISearchBar!
+    
     @IBAction func reload(sender: AnyObject) {
+        // Pull all documents from the database, store in 'data'
         
+        let results = cloudant.query([:])
+        
+        data = [String]()
+        
+        results?.enumerateObjectsUsingBlock { [unowned self] (obj, _, _) in
+            if let name = obj.body()["name"] as? String {
+                self.data.append(name)
+            }
+        }
+        
+        tableView.reloadData()
     }
     
     @IBAction func add(sender: AnyObject) {
@@ -28,7 +41,7 @@ class ViewController: UITableViewController, UISearchBarDelegate, UISearchDispla
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "reload", name: "CDTReplicationCompleted", object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "reload:", name: "CDTReplicationCompleted", object: nil)
     }
     
     deinit {

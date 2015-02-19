@@ -8,6 +8,8 @@
 
 import UIKit
 
+var cloudant = Cloudant(database:"interconnect", username:"interconnect2015", key:"cassayphapposillychawath", password: "7oKKggvTCewahieAvVMtvi8v")
+
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
@@ -16,6 +18,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.
+        
+        cloudant.startPullReplicationWithHandler {
+            NSNotificationCenter.defaultCenter().postNotificationName("CDTReplicationCompleted", object: nil)
+        }
+        
         return true
     }
 

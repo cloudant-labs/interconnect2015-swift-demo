@@ -19,6 +19,7 @@ extension CDTQueryResult: SequenceType {
     }
 }
 
+
 /// Swift-wrapper for Cloudant's CDTDatastore. See https://github.com/cloudant/CDTDatastore
 
 class Cloudant: NSObject, CDTReplicatorDelegate {
@@ -85,6 +86,8 @@ class Cloudant: NSObject, CDTReplicatorDelegate {
         
         // Create and start the replicator factory
         replicatorFactory = CDTReplicatorFactory(datastoreManager: manager)
+        
+        datastore.ensureIndexed(["_id"], withName: "all")
         
         super.init()
     }
@@ -219,17 +222,10 @@ class Cloudant: NSObject, CDTReplicatorDelegate {
         }
     }
     
-    func query(parameters: [String: String]) -> CDTQueryResult? {
-        if let im = indexManager {
-            var error: NSError?
-            let result = im.queryWithDictionary(parameters, error: &error)
-            
-            if let err = error {
-                println("Error querying index: \(err.localizedDescription)")
-                return nil
-            }
-            
-            return result
+    func query(parameters: NSDictionary) -> CDTQResultSet? {
+        
+        if let resultset = datastore.find(parameters) {
+            return resultset
         }
         
         return nil

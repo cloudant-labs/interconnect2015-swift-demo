@@ -3,3 +3,5 @@
 //
 
 #import <CloudantSync.h>
+#import "CDTDatastore+Query.h"
+#import "CDTQResultSet.h"
