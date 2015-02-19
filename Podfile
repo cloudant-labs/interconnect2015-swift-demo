@@ -1,0 +1,2 @@
+pod "CDTDatastore"
+pod "CloudantQueryObjc"
