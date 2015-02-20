@@ -132,14 +132,12 @@ class Cloudant: NSObject, CDTReplicatorDelegate {
         
         if replicator == nil {
             if let err = error {
-                println("Error creating replicator: \(err.localizedDescription)")
-                if let err = error {
-                    println("Error starting replicator: \(err.localizedDescription)")
-                    if errorHandler != nil {
-                        errorHandler!(err)
-                    }
+                println("Error starting replicator: \(err.localizedDescription)")
+                if errorHandler != nil {
+                    errorHandler!(err)
                 }
             }
+            
             return
         }
         
@@ -173,12 +171,9 @@ class Cloudant: NSObject, CDTReplicatorDelegate {
         replicator = replicatorFactory!.oneWay(pushReplication, error: &error)
         if replicator == nil {
             if let err = error {
-                println("Error creating replicator: \(err.localizedDescription)")
-                if let err = error {
-                    println("Error starting replicator: \(err.localizedDescription)")
-                    if errorHandler != nil {
-                        errorHandler!(err)
-                    }
+                println("Error starting replicator: \(err.localizedDescription)")
+                if errorHandler != nil {
+                    errorHandler!(err)
                 }
             }
             return
