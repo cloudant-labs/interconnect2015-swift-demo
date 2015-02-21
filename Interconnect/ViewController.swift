@@ -16,6 +16,26 @@ class ViewController: UITableViewController, UISearchBarDelegate, UISearchDispla
     @IBOutlet weak var searchBar: UISearchBar!
     
     @IBAction func reload(sender: AnyObject) {
+        UIApplication.sharedApplication().networkActivityIndicatorVisible = true
+        cloudant!.startPullReplicationWithHandler( { [unowned self] in
+            dispatch_async(dispatch_get_main_queue()) {
+                UIApplication.sharedApplication().networkActivityIndicatorVisible = false
+                self.reloadFromDatastore()
+            }
+        }, errorHandler: nil)
+    }
+    
+    @IBAction func add(sender: AnyObject) {
+        let name = NameGenerator.name()
+        data.append(name)
+        
+        cloudant!.save(["name": name], error: nil)
+        cloudant!.startPushReplicationWithHandler({ }, errorHandler: nil)
+        
+        tableView.reloadData()
+    }
+    
+    func reloadFromDatastore() {
         // Read all documents from the database, store in 'data'
         
         let results = cloudant!.query([:])
@@ -30,24 +50,10 @@ class ViewController: UITableViewController, UISearchBarDelegate, UISearchDispla
         
         tableView.reloadData()
     }
-    
-    @IBAction func add(sender: AnyObject) {
-        let name = NameGenerator.name()
-        data.append(name)
-        
-        cloudant!.save(["name": name], error: nil)
-        cloudant!.startPushReplicationWithHandler({ }, errorHandler: nil)
-        
-        tableView.reloadData()
-    }
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "reload:", name: "CDTPullReplicationCompleted", object: nil)
-    }
-    
-    deinit {
-        NSNotificationCenter.defaultCenter().removeObserver(self)
+        reload(self)
     }
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
