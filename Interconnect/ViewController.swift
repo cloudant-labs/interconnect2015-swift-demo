@@ -16,6 +16,7 @@ class ViewController: UITableViewController, UISearchBarDelegate, UISearchDispla
     @IBOutlet weak var searchBar: UISearchBar!
     
     @IBAction func reload(sender: AnyObject) {
+        // Pull data from remote
         UIApplication.sharedApplication().networkActivityIndicatorVisible = true
         cloudant!.startPullReplicationWithHandler( { [unowned self] in
             dispatch_async(dispatch_get_main_queue()) {
@@ -32,6 +33,8 @@ class ViewController: UITableViewController, UISearchBarDelegate, UISearchDispla
         cloudant!.save(["name": name], error: nil)
         cloudant!.startPushReplicationWithHandler({ }, errorHandler: nil)
         
+        // Reload the data outside the replication callback; we've already added the item to
+        // the model array. This should make the interface more responsive.
         tableView.reloadData()
     }
     
